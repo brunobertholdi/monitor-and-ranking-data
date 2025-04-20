@@ -363,7 +363,7 @@ def run_monitor_cycle(conn: sqlite3.Connection) -> int:
         return 0
 
     return total_changes
-def run_monitor(max_cycles: int = 80, interval_seconds: int = 120) -> None:
+def run_monitor(max_cycles: int = 50, interval_seconds: int = 120) -> None:
     """
     Função principal que executa o loop de monitoramento.
 
@@ -426,16 +426,6 @@ def run_monitor(max_cycles: int = 80, interval_seconds: int = 120) -> None:
 
 # --- Main Execution ---
 if __name__ == "__main__":
-    # Configura o Logfire usando variável de ambiente se disponível
-    try:
-        token = os.getenv("LOGFIRE_TOKEN")
-        if token:
-            logfire.configure(token=token)
-        else:
-            logfire.configure()
-        logfire.info("Logfire configurado com sucesso.")
-    except Exception as e:
-        print(f"Aviso: Não foi possível configurar o Logfire: {e}")
-    
-    # Iniciar o monitor com os parâmetros padrão
+    logfire.configure(token=os.getenv("LOGFIRE_TOKEN"))
+    # -- Run monitor -- #
     run_monitor()
