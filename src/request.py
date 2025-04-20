@@ -7,6 +7,7 @@ v0.0.1 - Bruno Bertholdi - 2025-04-19 - Initializes GetData class (a wrapper to 
 v0.0.2 - Bruno Bertholdi - 2025-04-19 - Adds logging and error handling. Logs are sent to logfire: https://logfire-us.pydantic.dev/bertbert/monitor-and-rank-data
 v0.0.3 - Bruno Bertholdi - 2025-04-19 - Integrates Pydantic models for data validation.
 v0.0.4 - Bruno Bertholdi - 2025-04-19 - Adds method to save gathered data to .csv file.
+v0.0.5 - Bruno Bertholdi - 2025-04-19 - Refactors data handling to return processed list, removing CSV saving.
 """
 
 # --- Imports --- #
@@ -15,9 +16,9 @@ import json
 import http.client
 from dotenv import load_dotenv
 import logfire
-import pandas as pd
 from datetime import datetime, timezone
 from pydantic import ValidationError
+from typing import List, Dict, Any, Optional
 
 from models import FlightDataResponse
 
@@ -56,9 +57,10 @@ class GetData():
         conn = http.client.HTTPSConnection(self.api_host)
         # Reverted endpoint and added parameters based on previous version/common practice
         endpoint = "/flights/airports/iata/DFW"
-        params = "?direction=Departure&durationMinutes=720&withCodeshared=true&withCargo=false&withPrivate=false" # Simplified params
+        params = "?offsetMinutes=-120&durationMinutes=720&withLeg=false&direction=Departure&withCancelled=false&withCodeshared=true&withCargo=false&withPrivate=false&withLocation=false"
         full_url = endpoint + params
         logfire.info(f"Making request to endpoint: {self.api_host}{full_url}")
+        processed_data: Optional[List[Dict[str, Any]]] = None # Initialize
         try:
             conn.request("GET", full_url, headers=self.headers)
             res = conn.getresponse()
@@ -76,7 +78,8 @@ class GetData():
                     validated_data = FlightDataResponse.model_validate_json(json_data)
                     logfire.info("API response successfully validated against Pydantic models.")
                     # Pass the validated Pydantic object to save_data
-                    self.save_data(validated_data)
+                    processed_data = self._process_flight_data(validated_data) # Renamed call
+                    # Return processed_data at the end
                 except ValidationError as e:
                     logfire.error(f"Data validation failed: {e}", payload={'raw_json': json_data[:1000]}) # Log part of raw data on validation error
                     return None # Or raise an exception
@@ -86,11 +89,13 @@ class GetData():
 
         except Exception as e:
             logfire.error(f"An error occurred during the request: {e}", exc_info=True)
+            return None # Indicate failure
         finally:
             conn.close()
             logfire.info("Connection closed.")
+        return processed_data # Return the list or None
 
-    def save_data(self, flight_data: FlightDataResponse):
+    def _process_flight_data(self, flight_data: FlightDataResponse) -> List[Dict[str, Any]]:
         """Processes and saves flight data into a structured format."""
         logfire.info("Processing and saving flight data.")
         records = []
@@ -138,20 +143,21 @@ class GetData():
             }
             records.append(record)
 
-        if records:
-            df = pd.DataFrame(records)
-            data_dir = 'data'
-            os.makedirs(data_dir, exist_ok=True)
-            # Save to CSV for now
-            output_path = os.path.join(data_dir, 'flight_data.csv')
-            df.to_csv(output_path, index=False)
-            logfire.info(f"Data saved successfully to {output_path}. Total records: {len(df)}")
-        else:
-            logfire.warning("No flight records to save.")
+        logfire.info(f"Processed {len(records)} flight records.")
+        return records
 
 # --- Test Execution --- #
 if __name__ == "__main__":
     logfire.info("Starting test execution of GetData.")
     getter = GetData()
-    getter.make_request() # save_data is now called within make_request
+    processed_flights = getter.make_request()
+
+    if processed_flights is not None:
+        logfire.info(f"Successfully processed {len(processed_flights)} flight records.")
+        # Optionally print the first record for verification
+        if processed_flights:
+            logfire.info(f"Sample record: {processed_flights[0]}")
+    else:
+        logfire.warning("No flight records were processed or an error occurred.")
+
     logfire.info("Test execution finished.")

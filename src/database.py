@@ -4,6 +4,9 @@ This module contains a wrapper class for saving flight data to a SQLite database
 
 [CHANGELOG] - Version - Author - Date - Changes
 v0.0.1 - Bruno Bertholdi - 2025-04-19 - Initializes database module.
+v0.0.2 - Bruno Bertholdi - 2025-04-19 - Enhances insertion logic, adds indices, includes example usage.
+v0.0.3 - Bruno Bertholdi - 2025-04-19 - Adds cycle_timestamp column for grouping snapshots.
+v0.0.4 - Bruno Bertholdi - 2025-04-19 - Adds flight_changes table and insertion logic.
 """
 # --- Imports --- #
 import os
@@ -14,7 +17,7 @@ from typing import Optional, Dict, Any
 
 # --- Constants --- #
 DATABASE_DIR = 'data'
-DATABASE_NAME = 'flights.db'
+DATABASE_NAME = 'flights_monitor_final.db'
 DATABASE_PATH = os.path.join(DATABASE_DIR, DATABASE_NAME)
 LOGFIRE_TOKEN = os.getenv('LOGFIRE_TOKEN')
 
@@ -46,6 +49,7 @@ def create_table(conn: sqlite3.Connection):
             CREATE TABLE IF NOT EXISTS flight_snapshots (
                 snapshot_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 unique_flight_id TEXT NOT NULL,
+                cycle_timestamp TEXT NOT NULL, -- ISO format timestamp for the monitoring cycle
                 workspace_timestamp TEXT NOT NULL, -- ISO format timestamp
                 flight_number TEXT,
                 airline_iata TEXT,
@@ -66,15 +70,37 @@ def create_table(conn: sqlite3.Connection):
         # Create indices separately for clarity and potentially better performance management
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_unique_flight_id ON flight_snapshots (unique_flight_id);")
         cursor.execute("CREATE INDEX IF NOT EXISTS idx_workspace_timestamp ON flight_snapshots (workspace_timestamp);")
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_cycle_timestamp ON flight_snapshots (cycle_timestamp);")
+
+        # --- Create flight_changes table --- #
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS flight_changes (
+                change_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                unique_flight_id TEXT NOT NULL,
+                change_detected_cycle_timestamp TEXT NOT NULL, -- Cycle timestamp when change was noticed
+                previous_cycle_timestamp TEXT NOT NULL,      -- Cycle timestamp of the snapshot *before* the change
+                attribute_changed TEXT NOT NULL,             -- 'scheduled_departure_utc', 'estimated_departure_utc', 'departure_gate'
+                previous_value TEXT,                         -- Value before the change
+                new_value TEXT,                              -- Value after the change
+                change_logged_at TEXT NOT NULL               -- Timestamp when this record was created
+            );
+        """)
+        # Add indices for flight_changes
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_changes_flight_id ON flight_changes (unique_flight_id);")
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_changes_detected_ts ON flight_changes (change_detected_cycle_timestamp);")
+        cursor.execute("CREATE INDEX IF NOT EXISTS idx_changes_attribute ON flight_changes (attribute_changed);")
 
         conn.commit()
-        logfire.info("Table 'flight_snapshots' and indices checked/created successfully.")
+        logfire.info("Tables ('flight_snapshots', 'flight_changes') and indices checked/created successfully.")
     except sqlite3.Error as e:
-        logfire.error(f"Error creating table 'flight_snapshots' or indices: {e}", exc_info=True)
+        logfire.error(f"Error creating tables or indices: {e}", exc_info=True)
 
-def insert_snapshot(conn: sqlite3.Connection, snapshot_data: Dict[str, Any]):
+
+def insert_snapshot(conn: sqlite3.Connection, snapshot_data: Dict[str, Any], cycle_timestamp: str):
     """Inserts a single flight snapshot record into the database."""
     prepared_data = snapshot_data.copy() # Avoid modifying the original dict
+    prepared_data['cycle_timestamp'] = cycle_timestamp # Add cycle timestamp
+
     # Convert datetime objects to ISO format strings if they exist
     for key in ['workspace_timestamp', 'scheduled_departure_utc', 'estimated_departure_utc']:
         if isinstance(prepared_data.get(key), datetime):
@@ -89,7 +115,7 @@ def insert_snapshot(conn: sqlite3.Connection, snapshot_data: Dict[str, Any]):
     # Ensure all columns defined in the table exist in the data, adding None if missing
     # This makes the insertion more robust if the input dict sometimes lacks optional keys
     all_columns = [
-        'unique_flight_id', 'workspace_timestamp', 'flight_number', 'airline_iata',
+        'unique_flight_id', 'cycle_timestamp', 'workspace_timestamp', 'flight_number', 'airline_iata',
         'airline_name', 'scheduled_departure_utc', 'estimated_departure_utc',
         'departure_terminal', 'departure_gate', 'status', 'destination_iata',
         'destination_name', 'codeshare_status', 'is_operator', 'aircraft_model',
@@ -111,6 +137,37 @@ def insert_snapshot(conn: sqlite3.Connection, snapshot_data: Dict[str, Any]):
         # Include data keys in error for easier debugging
         logfire.error(f"Error inserting snapshot data (keys: {list(final_data.keys())}): {e}", exc_info=True)
         return None
+
+
+def insert_change_record(
+    conn: sqlite3.Connection,
+    unique_flight_id: str,
+    change_detected_cycle_timestamp: str,
+    previous_cycle_timestamp: str,
+    attribute_changed: str,
+    previous_value: Any,
+    new_value: Any
+):
+    """Inserts a record into the flight_changes table."""
+    change_logged_at = datetime.now().isoformat()
+    sql = """
+        INSERT INTO flight_changes (
+            unique_flight_id, change_detected_cycle_timestamp, previous_cycle_timestamp,
+            attribute_changed, previous_value, new_value, change_logged_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?)
+    """
+    try:
+        cursor = conn.cursor()
+        cursor.execute(sql, (
+            unique_flight_id, change_detected_cycle_timestamp, previous_cycle_timestamp,
+            attribute_changed, str(previous_value), str(new_value), change_logged_at
+        ))
+        # Removed conn.commit() here to avoid premature commits - let caller manage transaction
+        logfire.debug(f"Change record inserted for {unique_flight_id}, attribute: {attribute_changed}")
+    except sqlite3.Error as e:
+        logfire.error(f"Failed to insert change record for {unique_flight_id}: {e}", exc_info=True)
+        conn.rollback()
+
 
 def get_latest_snapshot(conn: sqlite3.Connection, unique_flight_id: str) -> Optional[sqlite3.Row]:
     """Retrieves the most recent snapshot for a given unique_flight_id."""
@@ -164,7 +221,8 @@ if __name__ == "__main__":
             'aircraft_model': 'B738',
             'aircraft_reg': 'N123AA'
         }
-        insert_snapshot(connection, test_data_1)
+        test_cycle_ts = datetime.now().isoformat() # Example cycle timestamp
+        insert_snapshot(connection, test_data_1, test_cycle_ts)
 
         # Test retrieval
         latest = get_latest_snapshot(connection, 'AA-123-20250420-JFK')
@@ -177,6 +235,24 @@ if __name__ == "__main__":
             logfire.info("Basic data verification passed.")
         else:
             logfire.warning("Could not retrieve latest snapshot for testing.")
+
+        # --- Test flight_changes insertion --- #
+        insert_change_record(
+            conn=connection,
+            unique_flight_id='AA-123-20250420-JFK',
+            change_detected_cycle_timestamp=datetime.now().isoformat(),
+            previous_cycle_timestamp=test_cycle_ts, # From snapshot insert
+            attribute_changed='departure_gate',
+            previous_value='D20',
+            new_value='D22'
+        )
+        logfire.info("Test change record inserted.")
+
+        # Simple query to check changes table (replace with more specific if needed)
+        cur = connection.cursor()
+        cur.execute("SELECT * FROM flight_changes LIMIT 5")
+        changes = cur.fetchall()
+        logfire.info(f"Sample change records: {changes}")
 
         connection.close()
         logfire.info("Database connection closed.")
