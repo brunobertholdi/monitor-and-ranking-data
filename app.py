@@ -143,9 +143,22 @@ elif page == "Ranking de Companhias":
         st.subheader("Relatório Detalhado de Rankings")
         ranking_text_path = os.path.join(reports_dir, "airline_rankings.txt")
         if os.path.exists(ranking_text_path):
-            with open(ranking_text_path, 'r') as f:
-                report = f.read()
+            # Tentar diferentes encodings para lidar com caracteres acentuados
+            encodings = ['utf-8', 'latin-1', 'cp1252', 'iso-8859-1']
+            report = None
+            
+            for encoding in encodings:
+                try:
+                    with open(ranking_text_path, 'r', encoding=encoding) as f:
+                        report = f.read()
+                        break  # Se conseguir ler, sai do loop
+                except UnicodeDecodeError:
+                    continue  # Tenta o próximo encoding
+                    
+            if report:
                 st.text(report)
+            else:
+                st.error("Falha ao ler o arquivo de relatorio. Erro de codificacao de caracteres.")
         else:
             st.warning("Relatório textual não disponível. Execute ranking.py para gerar.")
 
