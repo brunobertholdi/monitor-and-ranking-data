@@ -1,83 +1,83 @@
 RELATÓRIO DE VOOS MAIS ATRASADOS
 ==================================================
 
-1. Voo: AA AA 2480 para Saint Louis
-   Companhia: American Airlines
-   Atraso Máximo: 177.0 minutos
-   Atraso Médio: 40.0 minutos
-   Total de Mudanças: 4
-   Último Horário Programado: 2025-04-20 15:03:00+00:00
-   Último Horário Estimado: 2025-04-20 15:03:00+00:00
+1. Voo: AA AA 1820 para Ontario
+   Companhia: American
+   Atraso Máximo: 185.0 minutos
+   Atraso Médio: 185.0 minutos
+   Total de Mudanças: 1
+   Último Horário Programado: 2025-04-20 13:35:00+00:00
+   Último Horário Estimado: 2025-04-20 16:40:00+00:00
 
 2. Voo: AA AA 2480 para Saint Louis
    Companhia: American
-   Atraso Máximo: 177.0 minutos
-   Atraso Médio: 40.0 minutos
-   Total de Mudanças: 4
-   Último Horário Programado: 2025-04-20 15:03:00+00:00
-   Último Horário Estimado: 2025-04-20 15:03:00+00:00
+   Atraso Máximo: 142.0 minutos
+   Atraso Médio: 142.0 minutos
+   Total de Mudanças: 1
+   Último Horário Programado: 2025-04-20 12:23:00+00:00
+   Último Horário Estimado: 2025-04-20 14:45:00+00:00
 
 3. Voo: AA AA 1774 para Eugene
    Companhia: American
    Atraso Máximo: 140.0 minutos
-   Atraso Médio: 0.0 minutos
-   Total de Mudanças: 2
-   Último Horário Programado: 2025-04-20 17:19:00+00:00
+   Atraso Médio: 140.0 minutos
+   Total de Mudanças: 1
+   Último Horário Programado: 2025-04-20 14:59:00+00:00
    Último Horário Estimado: 2025-04-20 17:19:00+00:00
 
-4. Voo: OO OO 6451 para Houston
+4. Voo: JL JL 11 para Tokyo
+   Companhia: Japan Airlines
+   Atraso Máximo: 121.0 minutos
+   Atraso Médio: 121.0 minutos
+   Total de Mudanças: 1
+   Último Horário Programado: 2025-04-20 16:10:00+00:00
+   Último Horário Estimado: 2025-04-20 18:11:00+00:00
+
+5. Voo: OO OO 4957 para San Angelo
    Companhia: SkyWest Airlines
-   Atraso Máximo: 91.0 minutos
-   Atraso Médio: 68.5 minutos
-   Total de Mudanças: 2
-   Último Horário Programado: 2025-04-20 13:00:00+00:00
-   Último Horário Estimado: 2025-04-20 13:46:00+00:00
+   Atraso Máximo: 102.0 minutos
+   Atraso Médio: 102.0 minutos
+   Total de Mudanças: 1
+   Último Horário Programado: 2025-04-20 13:20:00+00:00
+   Último Horário Estimado: 2025-04-20 15:02:00+00:00
 
-5. Voo: MQ MQ 3580 para Memphis
-   Companhia: Envoy Air
-   Atraso Máximo: 71.0 minutos
-   Atraso Médio: 0.0 minutos
-   Total de Mudanças: 2
-   Último Horário Programado: 2025-04-20 12:35:00+00:00
-   Último Horário Estimado: 2025-04-20 13:46:00+00:00
+6. Voo: 9X 9X 419 para Hot Springs
+   Companhia: Southern  Express
+   Atraso Máximo: 90.0 minutos
+   Atraso Médio: 90.0 minutos
+   Total de Mudanças: 1
+   Último Horário Programado: 2025-04-20 14:30:00+00:00
+   Último Horário Estimado: 2025-04-20 16:00:00+00:00
 
-6. Voo: AA AA 2050 para San Diego
+7. Voo: AA AA 500 para Los Angeles
    Companhia: American
-   Atraso Máximo: 69.0 minutos
-   Atraso Médio: 0.0 minutos
-   Total de Mudanças: 4
-   Último Horário Programado: 2025-04-20 14:59:00+00:00
-   Último Horário Estimado: 2025-04-20 14:59:00+00:00
+   Atraso Máximo: 90.0 minutos
+   Atraso Médio: 90.0 minutos
+   Total de Mudanças: 1
+   Último Horário Programado: 2025-04-20 14:20:00+00:00
+   Último Horário Estimado: 2025-04-20 15:50:00+00:00
 
-7. Voo: AA AA 442 para Los Angeles
+8. Voo: AA AA 1554 para Cleveland
    Companhia: American
-   Atraso Máximo: 60.0 minutos
-   Atraso Médio: 57.5 minutos
-   Total de Mudanças: 2
-   Último Horário Programado: 2025-04-20 16:25:00+00:00
-   Último Horário Estimado: 2025-04-20 17:25:00+00:00
+   Atraso Máximo: 80.0 minutos
+   Atraso Médio: 80.0 minutos
+   Total de Mudanças: 1
+   Último Horário Programado: 2025-04-20 13:55:00+00:00
+   Último Horário Estimado: 2025-04-20 15:15:00+00:00
 
-8. Voo: AA AA 3105 para Minneapolis
+9. Voo: AA AA 2358 para Boston
    Companhia: American
-   Atraso Máximo: 58.0 minutos
-   Atraso Médio: 0.0 minutos
-   Total de Mudanças: 2
-   Último Horário Programado: 2025-04-20 17:17:00+00:00
-   Último Horário Estimado: 2025-04-20 17:17:00+00:00
+   Atraso Máximo: 79.0 minutos
+   Atraso Médio: 79.0 minutos
+   Total de Mudanças: 1
+   Último Horário Programado: 2025-04-20 15:22:00+00:00
+   Último Horário Estimado: 2025-04-20 16:41:00+00:00
 
-9. Voo: AA AA 5475 para Huntsville
+10. Voo: AA AA 2927 para Tucson
    Companhia: American
-   Atraso Máximo: 57.0 minutos
-   Atraso Médio: 0.0 minutos
-   Total de Mudanças: 2
-   Último Horário Programado: 2025-04-20 17:08:00+00:00
-   Último Horário Estimado: 2025-04-20 17:08:00+00:00
-
-10. Voo: AA AA 1385 para San José del Cabo
-   Companhia: American
-   Atraso Máximo: 46.0 minutos
-   Atraso Médio: 0.0 minutos
-   Total de Mudanças: 2
-   Último Horário Programado: 2025-04-20 17:24:00+00:00
-   Último Horário Estimado: 2025-04-20 17:24:00+00:00
+   Atraso Máximo: 79.0 minutos
+   Atraso Médio: 79.0 minutos
+   Total de Mudanças: 1
+   Último Horário Programado: 2025-04-20 14:56:00+00:00
+   Último Horário Estimado: 2025-04-20 16:15:00+00:00
 
