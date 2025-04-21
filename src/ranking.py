@@ -128,26 +128,78 @@ def plot_rankings(df: pd.DataFrame, output_dir: str = 'reports'):
     # Plot 1: Mudanças de horário por companhia aérea
     plt.figure(figsize=(12, 8))
     time_plot = df.sort_values('time_changes', ascending=False).head(10)
-    sns.barplot(x='airline_iata', y='time_changes', data=time_plot)
-    plt.title('Top 10 Companhias Aéreas por Mudanças de Horário')
+    
+    # Usar estilo mais moderno e sem linhas de grade nas barras
+    ax = sns.barplot(x='airline_iata', y='time_changes', data=time_plot, palette='viridis')
+    
+    # Adicionar valores no topo das barras
+    for i, v in enumerate(time_plot['time_changes']):
+        ax.text(i, v + 5, f'{int(v)}', ha='center', fontsize=10, fontweight='bold')
+    
+    # Configurar grid apenas no eixo Y, detrás das barras
+    ax.grid(axis='y', linestyle='--', alpha=0.7, zorder=0)  # zorder=0 coloca grid atrás das barras
+    
+    # Melhorar o estilo e título
+    plt.title('Top 10 Companhias Aéreas por Mudanças de Horário', fontsize=14, pad=20)
+    plt.ylabel('Número de Mudanças', fontsize=12)
+    plt.xlabel('Código IATA da Companhia', fontsize=12)
+    
+    # Limitar o eixo Y para dar espaço para os rótulos
+    y_max = time_plot['time_changes'].max() * 1.15  # 15% a mais que o valor máximo
+    plt.ylim(0, y_max)
+    
     plt.tight_layout()
-    plt.savefig(f'{output_dir}/time_changes_ranking.png')
+    plt.savefig(f'{output_dir}/time_changes_ranking.png', dpi=120)
 
     # Plot 2: Mudanças de portão por companhia aérea
     plt.figure(figsize=(12, 8))
     gate_plot = df.sort_values('gate_changes', ascending=False).head(10)
-    sns.barplot(x='airline_iata', y='gate_changes', data=gate_plot)
-    plt.title('Top 10 Companhias Aéreas por Mudanças de Portão')
+    ax = sns.barplot(x='airline_iata', y='gate_changes', data=gate_plot, palette='viridis')
+    
+    # Adicionar valores no topo das barras
+    for i, v in enumerate(gate_plot['gate_changes']):
+        ax.text(i, v + 5, f'{int(v)}', ha='center', fontsize=10, fontweight='bold')
+    
+    # Configurar grid apenas no eixo Y, detrás das barras
+    ax.grid(axis='y', linestyle='--', alpha=0.7, zorder=0)  # zorder=0 coloca grid atrás das barras
+    
+    # Melhorar o estilo e título
+    plt.title('Top 10 Companhias Aéreas por Mudanças de Portão', fontsize=14, pad=20)
+    plt.ylabel('Número de Mudanças', fontsize=12)
+    plt.xlabel('Código IATA da Companhia', fontsize=12)
+    
+    # Limitar o eixo Y para dar espaço para os rótulos
+    y_max = gate_plot['gate_changes'].max() * 1.15  # 15% a mais que o valor máximo
+    plt.ylim(0, y_max)
+    
     plt.tight_layout()
     plt.savefig(f'{output_dir}/gate_changes_ranking.png')
 
     # Plot 3: Ranking geral por companhia aérea
     plt.figure(figsize=(12, 8))
     overall_plot = df.sort_values('total_changes', ascending=False).head(10)
-    sns.barplot(x='airline_iata', y='total_changes', data=overall_plot)
-    plt.title('Top 10 Companhias Aéreas por Total de Mudanças')
+    
+    # Usar estilo mais moderno e sem linhas de grade nas barras
+    ax = sns.barplot(x='airline_iata', y='total_changes', data=overall_plot, palette='viridis')
+    
+    # Adicionar valores no topo das barras
+    for i, v in enumerate(overall_plot['total_changes']):
+        ax.text(i, v + 5, f'{int(v)}', ha='center', fontsize=10, fontweight='bold')
+    
+    # Configurar grid apenas no eixo Y, detrás das barras
+    ax.grid(axis='y', linestyle='--', alpha=0.7, zorder=0)  # zorder=0 coloca grid atrás das barras
+    
+    # Melhorar o estilo e título
+    plt.title('Top 10 Companhias Aéreas por Total de Mudanças', fontsize=14, pad=20)
+    plt.ylabel('Número de Mudanças', fontsize=12)
+    plt.xlabel('Código IATA da Companhia', fontsize=12)
+    
+    # Limitar o eixo Y para dar espaço para os rótulos
+    y_max = overall_plot['total_changes'].max() * 1.15  # 15% a mais que o valor máximo
+    plt.ylim(0, y_max)
+    
     plt.tight_layout()
-    plt.savefig(f'{output_dir}/overall_ranking.png')
+    plt.savefig(f'{output_dir}/overall_ranking.png', dpi=120)
 
     logfire.info(f"Visualizações salvas no diretório '{output_dir}'.")
 
