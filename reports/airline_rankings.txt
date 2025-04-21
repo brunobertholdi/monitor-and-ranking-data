@@ -1,0 +1,23 @@
+RANKING DE COMPANHIAS AÉREAS POR MUDANÇAS
+==================================================
+
+TOP 5 - MUDANÇAS DE HORÁRIO:
+1. American (AA): 128 mudanças
+2. Envoy Air (MQ): 17 mudanças
+3. SkyWest Airlines (OO): 8 mudanças
+4. Delta Air Lines (DL): 5 mudanças
+5. Frontier (F9): 4 mudanças
+
+TOP 5 - MUDANÇAS DE PORTÃO:
+0. American (AA): 0 mudanças
+0. Envoy Air (MQ): 0 mudanças
+0. SkyWest Airlines (OO): 0 mudanças
+0. Delta Air Lines (DL): 0 mudanças
+0. Frontier (F9): 0 mudanças
+
+TOP 5 - RANKING GERAL (MAIOR NÚMERO DE MUDANÇAS):
+1. American (AA): 128 mudanças totais
+2. Envoy Air (MQ): 17 mudanças totais
+3. SkyWest Airlines (OO): 8 mudanças totais
+4. Delta Air Lines (DL): 5 mudanças totais
+5. Frontier (F9): 4 mudanças totais

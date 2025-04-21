@@ -1,0 +1,16 @@
+airline_iata,airline_name,time_changes,time_change_rank,gate_changes,gate_change_rank,total_changes,overall_rank
+AA,American,128,1.0,0.0,0.0,128.0,1.0
+MQ,Envoy Air,17,2.0,0.0,0.0,17.0,2.0
+OO,SkyWest Airlines,8,3.0,0.0,0.0,8.0,3.0
+DL,Delta Air Lines,5,4.0,0.0,0.0,5.0,4.0
+F9,Frontier,4,5.0,0.0,0.0,4.0,5.0
+NK,Spirit,4,5.0,0.0,0.0,4.0,5.0
+AA,American Airlines,4,5.0,0.0,0.0,4.0,5.0
+UA,United,3,6.0,0.0,0.0,3.0,6.0
+9X,Southern  Express,2,7.0,0.0,0.0,2.0,7.0
+AC,Air Canada,2,7.0,0.0,0.0,2.0,7.0
+AS,Alaska,2,7.0,0.0,0.0,2.0,7.0
+5Y,Atlas Air,1,8.0,0.0,0.0,1.0,8.0
+JL,Japan Airlines,1,8.0,0.0,0.0,1.0,8.0
+KE,Korean Air,1,8.0,0.0,0.0,1.0,8.0
+SY,Sun Country,1,8.0,0.0,0.0,1.0,8.0
