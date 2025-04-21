@@ -71,7 +71,8 @@ Analisa os dados coletados para classificar as companhias aéreas com base na fr
 - Cálculo de rankings por mudanças de portão
 - Cálculo de rankings gerais de desempenho
 - Relatórios textuais resumidos
-- Visualizações das classificações com seaborn/matplotlib
+- Visualizações usando seaborn/matplotlib:
+
 
 ### reports.py
 
@@ -79,9 +80,11 @@ Gera relatórios detalhados e visualizações para análise dos dados coletados,
 
 **Principais funcionalidades**:
 - Identificação dos voos mais atrasados
-- Criação de gráficos temporais mostrando a evolução de horários
+- Gráficos informativos mostrando atrasos por voo
+- Gráfico consolidado de atrasos dos voos mais afetados
+- Gráfico de evolução temporal dos atrasos
 - Heatmaps de atrasos por dia da semana e hora do dia
-- Histogramas de distribuição de atrasos
+- Histogramas de distribuição dos atrasos significativos (>= 5 minutos de atraso)
 - Relatórios textuais detalhados
 
 ## Fluxo de Execução
