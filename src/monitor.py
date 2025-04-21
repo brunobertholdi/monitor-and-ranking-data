@@ -15,7 +15,7 @@ v0.0.4 - Bruno Bertholdi - 2025-04-20 - Minor refactoring and organization.
 import time
 import logfire
 from datetime import datetime, timezone
-from typing import Dict, Any, Optional, List, Tuple
+from typing import Dict, Any, Optional, List
 import sqlite3
 import os
 
@@ -76,7 +76,7 @@ def save_snapshot(conn: sqlite3.Connection, snapshot: Dict[str, Any], cycle_time
     """
     prepared_data = snapshot.copy()  # Evita modificar o dicionário original
     prepared_data['cycle_timestamp'] = cycle_timestamp
-    
+
     # Usando o mesmo timestamp do ciclo para workspace_timestamp, simplificando
     prepared_data['workspace_timestamp'] = cycle_timestamp
 
