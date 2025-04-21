@@ -147,6 +147,48 @@ python src/reports.py
 
 Gera relatórios detalhados e visualizações para análise aprofundada.
 
+### Dashboard Interativo
+
+O sistema inclui um dashboard interativo desenvolvido com Streamlit para visualização das análises geradas.
+
+```bash
+streamlit run app.py
+```
+
+> **Nota:** O dashboard é estático e exibe apenas relatórios pré-gerados. É necessário executar `ranking.py` e `reports.py` antes para gerar os gráficos e relatórios.
+
+### Execução via Docker
+
+O projeto inclui um Dockerfile para facilitar a implantação do dashboard.
+
+```bash
+# Construir a imagem Docker
+docker build -t flight-monitor-dashboard .
+
+# Executar o container
+docker run -p 8501:8501 flight-monitor-dashboard
+```
+
+Após a execução, o dashboard estará disponível em `http://localhost:8501`.
+
+> **Importante:** A imagem Docker contém apenas o dashboard Streamlit estático e não inclui a capacidade de atualizar dados em tempo real. A pasta `reports/` deve conter todos os relatórios e gráficos gerados previamente para que o dashboard funcione corretamente.
+
+## Próximos Passos
+
+### Dashboard em Tempo Real
+
+Uma evolução natural do sistema seria integrar o monitor diretamente ao frontend, permitindo a visualização de dados em tempo real e a geração de relatórios sob demanda. Isto poderia ser implementado:
+
+1. Modificando o app Streamlit para acessar diretamente o banco de dados e gerar visualizações dinâmicas
+2. Criando um serviço de backend com FastAPI que disponibilizaria endpoints para o dashboard consumir
+3. Implementando websockets para atualização em tempo real dos dados no frontend
+
+### Melhorias na Análise de Dados
+
+1. Implementar modelos preditivos para prever atrasos com base em padrões históricos
+2. Expandir as análises para incluir outros aeroportos além de DFW
+3. Adicionar correlações com dados meteorológicos para análise de causas de atrasos
+
 ## Estrutura do Banco de Dados
 
 ### Tabela `flight_snapshots`
